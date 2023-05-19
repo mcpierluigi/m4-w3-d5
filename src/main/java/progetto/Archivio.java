@@ -33,12 +33,14 @@ public class Archivio {
 		Utente anna = new Utente("Annamaria", "Vitellone", LocalDate.of(1960, 8, 16));
 		Utente samu = new Utente("Samuele", "Pizzingrilli", LocalDate.of(1995, 11, 28));
 		
-		Prestito prestito1 = new Prestito(LocalDate.of(2020, 1, 23), LocalDate.of(2021, 2, 10), pier, libro1);
+		Prestito prestito1 = new Prestito(LocalDate.of(2023, 1, 23), LocalDate.of(2023, 2, 10), pier, libro1);
 		Prestito prestito2 = new Prestito(LocalDate.of(2023, 2, 11), LocalDate.of(2023, 2, 20), nico, rivista1);
 		Prestito prestito3 = new Prestito(LocalDate.of(2023, 3, 20), LocalDate.of(2023, 5, 20), anna, libro2);
-		Prestito prestito4 = new Prestito(LocalDate.of(2023, 5, 20), LocalDate.of(2023,  7, 20), samu, rivista2);
-
+		Prestito prestito4 = new Prestito(LocalDate.of(2023, 5, 20), null, samu, rivista2);
+		//"34eeb279-cf11-4350-8352-ff322fc5c7d4"
+		
 		//Tests
+/*
 		ed.saveElemento(libro1);
 		ed.saveElemento(libro2);
 		ed.saveElemento(libro3);
@@ -56,24 +58,39 @@ public class Archivio {
 		pd.savePrestito(prestito2);
 		pd.savePrestito(prestito3);
 		pd.savePrestito(prestito4);
-		
-		
-		Elemento trovatoByISBN = ed.getByISBN(UUID.fromString("015a2192-9e3a-4e8e-a421-fb2499cbc062"));
+*/
+		log.info("Elemento trovato per codice ISBN:");
+		Elemento trovatoByISBN = ed.getByISBN(UUID.fromString("054b4773-c0dd-4684-899f-8492267feb09"));
 		log.info(trovatoByISBN.toString());
 		
+		log.info("Elementi trovati per anno:");
 		List<Elemento> trovatiByYear = ed.getByYear(2023);
 		if(trovatiByYear.size() > 0) {
 			trovatiByYear.stream().forEach(e -> log.info(e.toString()));
 		}
 		
+		log.info("Elemento trovato per autore:");
 		List<Libro> trovatiByAuthor = ed.getByAuthor("Dashmer");
 		if(trovatiByAuthor.size() > 0) {
 			trovatiByAuthor.stream().forEach(e -> log.info(e.toString()));
 		}
 		
+		log.info("Elementi trovati per titolo/parte del titolo:");
 		List<Elemento> trovatiByTitle = ed.getByTitle("Geographic");
 		if(trovatiByTitle.size() > 0) {
 			trovatiByTitle.stream().forEach(e -> log.info(e.toString()));
 		}
+		
+		log.info("Prestiti trovati per utente e ancora da consegnare:");
+		List<Prestito> trovatiByIdUtente = pd.findPrestitiByIdUtente(UUID.fromString("34eeb279-cf11-4350-8352-ff322fc5c7d4"));
+		if (trovatiByIdUtente.size() > 0) {
+			trovatiByIdUtente.stream().forEach(c -> log.info(c.toString()));
+		}
+		
+		log.info("Prestiti scaduti:");
+		List<Prestito> prestitiScaduti = pd.findPrestitiScaduti();
+		if (prestitiScaduti.size() > 0) {
+			prestitiScaduti.stream().forEach(c -> log.info("questo prestito è scaduto: " + c.toString()));
+		} 
 	}
 }

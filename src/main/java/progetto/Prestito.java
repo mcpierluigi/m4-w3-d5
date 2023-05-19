@@ -7,6 +7,8 @@ import javax.persistence.*;
 import lombok.*;
 
 @Entity
+@NamedQuery(name = "findPrestitiByIdUtente", query = "SELECT p FROM Prestito p WHERE p.utente.tessera = :id AND p.dataConsegna IS NULL")
+@NamedQuery(name = "findPrestitiScaduti", query = "SELECT p FROM Prestito p WHERE p.dataConsegna > p.dataFine OR p.dataConsegna IS NULL")
 @Table(name = "prestiti")
 @Getter
 @Setter
@@ -15,8 +17,7 @@ public class Prestito {
 	@Id
 	@GeneratedValue
 	private UUID id;
-	private LocalDate dataInizio, dataConsegna;
-	private LocalDate dataFine;
+	private LocalDate dataInizio, dataConsegna, dataFine;
 	
 	@ManyToOne
 	private Utente utente;
@@ -25,7 +26,7 @@ public class Prestito {
 	
 	public Prestito (LocalDate inizio, LocalDate consegna, Utente utente, Elemento elemento) {
 		this.dataInizio = inizio;
-		this.dataFine = inizio.plusDays(30);
+		this.dataFine = inizio.plusMonths(1);
 		this.dataConsegna = consegna;
 		this.utente = utente;
 		this.elementoInPrestito = elemento;

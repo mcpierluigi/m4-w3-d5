@@ -22,8 +22,14 @@ public class PrestitoDAO {
 
 	}
 
-	public Prestito getById(UUID id) {
-		Prestito prestitoTrovato = em.find(Prestito.class, id);
-		return prestitoTrovato;
+	public List<Prestito> findPrestitiByIdUtente(UUID id){
+		TypedQuery<Prestito> getAllQuery = em.createNamedQuery("findPrestitiByIdUtente", Prestito.class);
+		getAllQuery.setParameter("id", id);
+		return getAllQuery.getResultList();
+	}
+	
+	public List<Prestito> findPrestitiScaduti() {
+		TypedQuery<Prestito> query = em.createNamedQuery("findPrestitiScaduti", Prestito.class);
+		return query.getResultList();
 	}
 }
